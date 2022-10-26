@@ -6,12 +6,14 @@ import javax.persistence.*;
 @Table(name="blogs")
 public class Blog {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     @Column(columnDefinition = "Long")
     private String content;
-
+@ManyToOne
+@JoinColumn(name = "category_id")
+private  Category category;
 
     @Override
     public String toString() {
@@ -19,6 +21,12 @@ public class Blog {
     }
 
     public Blog() {
+    }
+
+    public Blog(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
     }
 
     public Blog(Long id, String title, String content) {
@@ -49,5 +57,13 @@ public class Blog {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

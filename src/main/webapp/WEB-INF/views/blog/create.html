@@ -20,7 +20,18 @@
     </tr>
     <tr>
       <td>Content:</td>
-      <td><input type="text" th:field="*{content}"/></td>
+      <td><textarea th:field="*{content}"/></td>
+    </tr>
+    <tr>
+      <td>Category:</td>
+      <td>
+        <select name="category">
+          <option th:each="p : ${categories}"
+                  th:value="${p.id}"
+                  th:text="${p.name}"
+                  th:selected="(${blog.category}) and (${p.id} == *{category.id})"></option>
+        </select>
+      </td>
     </tr>
     <tr>
       <td></td>

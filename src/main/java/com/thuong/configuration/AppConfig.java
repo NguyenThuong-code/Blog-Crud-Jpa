@@ -1,9 +1,8 @@
 package com.thuong.configuration;
 
-import com.thuong.repository.BlogRepository;
-import com.thuong.repository.IBlogRepository;
-import com.thuong.service.BlogService;
-import com.thuong.service.IBlogService;
+//import com.thuong.repository.BlogRepository;
+import com.thuong.formattter.CategoryFormatter;
+import com.thuong.service.category.CategoryService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +10,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -33,7 +35,9 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan("com.thuong.controller")
+@ComponentScan("com.thuong")
+@EnableJpaRepositories("com.thuong.repository")
+@EnableSpringDataWebSupport
 public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
     private ApplicationContext applicationContext;
 
@@ -111,14 +115,16 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
-
-    @Bean
-    public IBlogRepository blogRepository() {
-        return new BlogRepository();
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new CategoryFormatter(applicationContext.getBean(CategoryService.class)));
     }
+///**
+// *
+// @Override
+// public void addFormatters(FormatterRegistry registry) {
+// registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
+// }
+// *
 
-    @Bean
-    public IBlogService blogService() {
-        return new BlogService();
-    }
 }
